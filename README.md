@@ -578,4 +578,4 @@ java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --mast
 
 ## Demonstration Video
 
-![](running master & slave-fast.gif)
+![](running-master-slave.gif)
