@@ -1,0 +1,169 @@
+package com.lampo.slave.config;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.lampo.slave.utils.StringUtils.getProperty;
+import static com.lampo.slave.utils.StringUtils.isBlank;
+import static com.rabbitmq.client.ConnectionFactory.DEFAULT_AMQP_PORT;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import lombok.NonNull;
+
+/**
+ * MIT License <br/>
+ * <br/>
+ * 
+ * Copyright (c) [2021] [PharmEasyEngg] <br/>
+ * <br/>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, prepare derivatives of the work, and to permit
+ * persons to whom the Software is furnished to do so, subject to the following
+ * conditions: <br/>
+ * <br/>
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software. <br/>
+ * <br/>
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. <br/>
+ * <br/>
+ * 
+ * Commercial distributors of software may accept certain responsibilities with
+ * respect to end users, business partners and the like. While this license is
+ * intended to facilitate the commercial use of the Program, the Contributor who
+ * includes the Program in a commercial product offering should do so in a
+ * manner which does not create potential liability for other Contributors.
+ * <br/>
+ * <br/>
+ * 
+ * This License does not grant permission to use the trade names, trademarks,
+ * service marks, or product names of the Licensor, except as required for
+ * reasonable and customary use in describing the origin of the Work and
+ * reproducing the content of the NOTICE file. <br/>
+ * <br/>
+ * 
+ * This software uses open-source dependencies that are listed under the
+ * licenses - {@link <a href="https://www.eclipse.org/legal/epl-2.0/">Eclipse
+ * Public License v2.0</a>},
+ * {@link <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache
+ * License 2.0</a>}, {@link <a href=
+ * "https://www.mongodb.com/licensing/server-side-public-license">Server Side
+ * Public License</a>},
+ * {@link <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public
+ * License 2.0</a>} and {@link <a href="https://opensource.org/licenses/MIT">MIT
+ * License</a>}. Please go through the description of the licenses to understand
+ * the usage agreement.
+ * 
+ *
+ */
+@Configuration
+@PropertySource("classpath:application.properties")
+public class ClientConfiguration {
+
+	@Value("${master.host}")
+	private String masterHost;
+
+	@Value("${queue.username}")
+	private String queueUsername;
+
+	@Value("${queue.password}")
+	private String queuePassword;
+
+	@Bean
+	public RabbitTemplate setRabbitTemplate() {
+
+		RabbitTemplate template = new RabbitTemplate(getConnectionFactory());
+		template.setMessageConverter(jsonMessageConverter());
+		return template;
+	}
+
+	private ConnectionFactory getConnectionFactory() {
+
+		if (isBlank(masterHost)) {
+			masterHost = getProperty("master.host");
+		}
+		checkArgument(!isBlank(masterHost),
+				"master host is not found. Please pass `--master.host=<ip[:port]>` or `-Dmaster.host=<ip[:port]>` or set as environment variable `master.host=<ip[:port]>`");
+
+		String queueHost = getQueueHost(masterHost);
+
+		CachingConnectionFactory connectionFactory = new CachingConnectionFactory(queueHost, DEFAULT_AMQP_PORT);
+
+		boolean isLocalNetwork = masterHost.equals("127.0.0.1") || masterHost.equals("0.0.0.0")
+				|| masterHost.startsWith("192.") || masterHost.startsWith("local");
+		if (!isLocalNetwork) {
+			if (isBlank(queueUsername)) {
+				queueUsername = getProperty("queue.username");
+			}
+			checkArgument(!isBlank(queueUsername),
+					"queue username is not found. Please pass `--queue.username=<username>` or `-Dqueue.username=<username>` or set as environment variable `queue.username=<username>`");
+			queueUsername = queueUsername.trim();
+
+			if (isBlank(queuePassword)) {
+				queuePassword = getProperty("queue.username");
+			}
+			checkArgument(!isBlank(queuePassword),
+					"queue password is not found. Please pass `--queue.password=<password>` or `-Dqueue.password=<password>` or set as environment variable `queue.password=<password>`");
+			queuePassword = queuePassword.trim();
+
+			connectionFactory.setUsername(queueUsername);
+			connectionFactory.setPassword(queuePassword);
+		}
+		return connectionFactory;
+	}
+
+	@Bean
+	public MessageConverter jsonMessageConverter() {
+		return new Jackson2JsonMessageConverter();
+	}
+
+	private String getQueueHost(@NonNull String host) {
+
+		if (host.startsWith("http")) {
+			String _host = host.replaceAll("http.*://", "");
+			int index = _host.indexOf(':');
+			return _host.substring(0, index == -1 ? _host.length() : index).replace("/", "");
+		}
+		int index = host.indexOf(':');
+		return host.substring(0, index == -1 ? host.length() : index).replace("/", "");
+	}
+
+	@Bean
+	public RestTemplate getRestTemplate() {
+		List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
+		messageConverters.add(converter);
+		messageConverters.add(new FormHttpMessageConverter());
+		messageConverters.add(new StringHttpMessageConverter());
+		return new RestTemplate(messageConverters);
+	}
+}
