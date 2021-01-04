@@ -570,11 +570,11 @@ java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --mast
 	
 ## Limitations
 
-* [OpenSTF](https://github.com/DeviceFarmer/stf) is currently supported for android devices (real devices and emulators) only. In the near future, once the support for iOS is added, it shall be incorported.
+* For iOS devices, the solution only supports running the automated tests.
 
 ## Future Plans
 
-*  Adding support for iOS.
+*  Support for manual testing on iOS devices.
 
 ## Demonstration Video
 
