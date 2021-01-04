@@ -10,4 +10,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 This software uses open-source dependencies that are listed under the licenses - [Eclipse Public License v2.0](https://www.eclipse.org/legal/epl-2.0/), [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html), [Server Side Public License](https://www.mongodb.com/licensing/server-side-public-license), [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/) and [MIT License](https://opensource.org/licenses/MIT). Please go through the description of the licenses to understand the usage agreement.
 
-By using this License you agree that you have read, understood and agreed to be bound by, including without limitation by these Terms and that the entire risk as to the quality and performance of the software is with you.
+By using the license, you agree that you have read, understood and agree to be bound by, including without any limitation by these terms and that the entire risk as to the quality and performance of the software is with you.
