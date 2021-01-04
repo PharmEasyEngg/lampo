@@ -62,6 +62,195 @@ For enabling the **mongodb** service to run in background in **Mac**, run the fo
 brew services start mongodb-community
 ```
 
+### Building the Application
+
+```
+cd remote-device-manager && ./gradlew clean build 
+```
+
+### Running the Application
+
+Once the application is built successfully, **`build/libs/remote-device-manager.war`** will be created. Run the following command to start the master application:
+
+```
+java -jar build/libs/remote-device-manager.war
+```
+
+> **Note:** Make sure **rabbitmq** and **mongodb** services are up and running.
+
+This command can be run in background using the following command:
+
+```
+java -jar build/libs/remote-device-manager.war > master.log 2>&1 < /dev/null &
+```
+
+#### Overridable Configurations
+
+All the configurations are present in **`remote-device-manager/src/main/resources/application.properties`**
+
+* **`max_session_duration`** — maximum duration to allow sessions to be allocated in seconds. **Default: 900**
+* **`cron.reap_unreachable_slaves`** — to clean up unreachable devices and devices connected to them. **Default: */30 * * * * ?** to check every 30 seconds.
+* **`cron.reap_long_running_sessions`** — to clean up allocated sessions running longer than the permitted duration as given by **`max_session_duration`** property . **Default: */30 * * * * ?** to check every 30 seconds.
+
+All the above configurations are be overridden by passing them when launching the application from commandline as well by prefixing **`--`**.
+
+```
+java -jar build/libs/remote-device-manager.war --max_session_duration=15
+```
+
+
+## Install - Slave
+
+### Prerequisites
+
+#### Java 8 
+
+Please follow the [link](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) for installing **Oracle JDK 8** or [link](https://adoptopenjdk.net/) for **AdoptJDK**.
+
+### Android SDK
+
+* Install Android Studio from [https://developer.android.com/studio](https://developer.android.com/studio)
+* From SDK Manager → SDK Tools, install Android Emulator, Android SDK Platform-Tools, Android SDK Tools
+* From AVD Manager → Create New Virtual Device, if required
+Once this installation is done, Android Studio is not required anymore. It can be removed.
+
+Also, make sure **ANDROID_HOME** environment variable is set. To know the path, open Android Studio → Configure (appear on lower bottom corner) → SDK Manager → Copy Android SDK Location
+
+#### Node Version Manager
+
+Please follow the link to install [nvm](https://github.com/nvm-sh/nvm) or execute the following commands from terminal.
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+```
+
+Depending on the profile file **`~/.bash_profile`**, **`~/.zshrc`**, **`~/.profile`**, or **`~/.bashrc`**, add the following code in that file:
+
+
+```
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+```
+
+### Xcode for iOS Automation
+
+Xcode can be installed from App Store or [https://developer.apple.com/download/](https://developer.apple.com/download/) on your Mac machine.
+
+#### Appium
+
+We will be using node version **14.5.0** for appium installation.
+
+* For installing node version **14.5.0**, run the following command:
+
+
+    ```
+    nvm install 14.5.0 
+    ```
+    
+    > **Note:** Changing the version of node from 14.5.0  willl require source code change of slave as well in ***remote-slave-app/src/main/resources/scripts/wd-session.bash***.
+
+* For switching to node version **14.5.0**, run the following command:
+
+
+    ```
+    nvm use --delete-prefix v14.5.0 
+    ```
+    
+* For installing appium, please follow the [link](https://appium.io/docs/en/about-appium/getting-started/) or execute the following commands from terminal:
+
+
+    ```
+    npm -g install appium
+    ```
+    
+    **For iOS devices on Mac:**
+    
+    ```
+    brew install ideviceinstaller ios-deploy carthage
+    ```
+    
+    **Optional Dependencies for iOS Devices**
+    
+    ```
+    brew tap facebook/fb
+    brew install fbsimctl --HEAD
+    ```
+
+    
+
+
+#### OpenSTF
+
+Please follow the link for installing [stf](https://github.com/DeviceFarmer/stf).
+
+For installation on **Mac**, please run the following commands from terminal:
+
+```
+brew install rethinkdb graphicsmagick zeromq protobuf yasm pkg-config
+```
+
+For enabling the **rethinkdb** service to run in background in **Mac**, run the following command:
+
+
+```
+brew services start rethinkdb
+```
+
+For installing stf, run the following command;
+
+
+```
+nvm use --delete-prefix v8.16.1 
+npm install -g @devicefarmer/stf
+```
+
+> **Note:** node version **8.16.1** is being used for **stf**, as it is not working with higher versions of node because of a few backward incompatible changes in some dependent modules.  
+
+### Building the Application
+
+
+```
+cd remote-slave-app && ./gradlew clean build 
+```
+
+### Runing the Application
+
+Once the application is built, will be created **`build/libs/remote-slave-app.war`**. Run the following command to launch and attach the slave to master.
+
+```
+java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --master.host=0.0.0.0
+```
+
+* **`-Dandroid.home`** — optional if **`ANDROID_HOME`** environment variable is set.
+* **`--master.host`** — default connnects to **`0.0.0.0`**. Should to change to the IP of machine that is running the master application.
+
+This command can be run in background using the following command:
+
+```
+java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --master.host=0.0.0.0 > slave.log 2>&1 < /dev/null &
+```
+
+### Dashboard
+
+Once the application is started successfully, open [http://localhost:5353/remote-device-manager/](http://localhost:5353/remote-device-manager/) to view the dashboard that displays the connected devices. If no slaves is connected to the master or slave(s) is connected but no devices are connected to the slave, then **"No Device Available"** wil be shown.
+
+This page automatically refreshes every **5 seconds**.
+
+![](dashboard.png)
+
+* If any of the devices is alllocated, it will be grayed out and shows the information about whom it is allocated to.
+* Clicking on the device, redirection to the STF page will happen where we can input name and email to interact with the device.
+
+> **Note:** Currently STF is supported for android phones only (both emulators and real devices). Hence interaction with iOS devices is currently not supported.
+
+
+
+### Maintenance Activities
+
+* **Daily at 12:00 AM**, all the logs will be cleaned up. This is controlled by the application property **`cron.clean_up_logs`** present in **`remote-slave-app/src/main/resources/application.properties`**. As the logs will be cleaned up, the URL of appium session logs that is sent when allocating session will be valid only until its is cleared.
+* **Daily at 02:00 AM**, all the emulators will be rebooted. This is controlled by the application property **`cron.restart_emulators`** present in **`remote-slave-app/src/main/resources/application.properties`**
+
+
 ### APIs
 
 * Default base url of the application is [http://localhost:5353](http://localhost:5353)
@@ -310,192 +499,6 @@ For uploading images of mobile phones connected to the slave machines. If no mat
 	
 	unique id of the uploaded image.
 
-
-### Building the Application
-
-```
-cd remote-device-manager && ./gradlew clean build 
-```
-
-### Running the Application
-
-Once the application is built successfully, **`build/libs/remote-device-manager.war`** will be created. Run the following command to start the master application:
-
-```
-java -jar build/libs/remote-device-manager.war
-```
-
-> **Note:** Make sure **rabbitmq** and **mongodb** services are up and running.
-
-This command can be run in background using the following command:
-
-```
-java -jar build/libs/remote-device-manager.war > master.log 2>&1 < /dev/null &
-```
-
-#### Overridable Configurations
-
-All the configurations are present in **`remote-device-manager/src/main/resources/application.properties`**
-
-* **`max_session_duration`** — maximum duration to allow sessions to be allocated in seconds. **Default: 900**
-* **`cron.reap_unreachable_slaves`** — to clean up unreachable devices and devices connected to them. **Default: */30 * * * * ?** to check every 30 seconds.
-* **`cron.reap_long_running_sessions`** — to clean up allocated sessions running longer than the permitted duration as given by **`max_session_duration`** property . **Default: */30 * * * * ?** to check every 30 seconds.
-
-All the above configurations are be overridden by passing them when launching the application from commandline as well by prefixing **`--`**.
-
-```
-java -jar build/libs/remote-device-manager.war --max_session_duration=15
-```
-
-### Dashboard
-
-Once the application is started successfully, open [http://localhost:5353/remote-device-manager/](http://localhost:5353/remote-device-manager/) to view the dashboard that displays the connected devices. If no slaves is connected to the master or slave(s) is connected but no devices are connected to the slave, then **"No Device Available"** wil be shown.
-
-This page automatically refreshes every **5 seconds**.
-
-![](dashboard.png)
-
-* If any of the devices is alllocated, it will be grayed out and shows the information about whom it is allocated to.
-* Clicking on the device, redirection to the STF page will happen where we can input name and email to interact with the device.
-
-> **Note:** Currently STF is supported for android phones only (both emulators and real devices). Hence interaction with iOS devices is currently not supported.
-
-
-## Install - Slave
-
-### Prerequisites
-
-#### Java 8 
-
-Please follow the [link](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) for installing **Oracle JDK 8** or [link](https://adoptopenjdk.net/) for **AdoptJDK**.
-
-### Android SDK
-
-* Install Android Studio from [https://developer.android.com/studio](https://developer.android.com/studio)
-* From SDK Manager → SDK Tools, install Android Emulator, Android SDK Platform-Tools, Android SDK Tools
-* From AVD Manager → Create New Virtual Device, if required
-Once this installation is done, Android Studio is not required anymore. It can be removed.
-
-Also, make sure **ANDROID_HOME** environment variable is set. To know the path, open Android Studio → Configure (appear on lower bottom corner) → SDK Manager → Copy Android SDK Location
-
-#### Node Version Manager
-
-Please follow the link to install [nvm](https://github.com/nvm-sh/nvm) or execute the following commands from terminal.
-
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-```
-
-Depending on the profile file **`~/.bash_profile`**, **`~/.zshrc`**, **`~/.profile`**, or **`~/.bashrc`**, add the following code in that file:
-
-
-```
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-```
-
-### Xcode for iOS Automation
-
-Xcode can be installed from App Store or [https://developer.apple.com/download/](https://developer.apple.com/download/) on your Mac machine.
-
-#### Appium
-
-We will be using node version **14.5.0** for appium installation.
-
-* For installing node version **14.5.0**, run the following command:
-
-
-    ```
-    nvm install 14.5.0 
-    ```
-    
-    > **Note:** Changing the version of node from 14.5.0  willl require source code change of slave as well in ***remote-slave-app/src/main/resources/scripts/wd-session.bash***.
-
-* For switching to node version **14.5.0**, run the following command:
-
-
-    ```
-    nvm use --delete-prefix v14.5.0 
-    ```
-    
-* For installing appium, please follow the [link](https://appium.io/docs/en/about-appium/getting-started/) or execute the following commands from terminal:
-
-
-    ```
-    npm -g install appium
-    ```
-    
-    **For iOS devices on Mac:**
-    
-    ```
-    brew install ideviceinstaller ios-deploy carthage
-    ```
-    
-    **Optional Dependencies for iOS Devices**
-    
-    ```
-    brew tap facebook/fb
-    brew install fbsimctl --HEAD
-    ```
-
-    
-
-
-#### OpenSTF
-
-Please follow the link for installing [stf](https://github.com/DeviceFarmer/stf).
-
-For installation on **Mac**, please run the following commands from terminal:
-
-```
-brew install rethinkdb graphicsmagick zeromq protobuf yasm pkg-config
-```
-
-For enabling the **rethinkdb** service to run in background in **Mac**, run the following command:
-
-
-```
-brew services start rethinkdb
-```
-
-For installing stf, run the following command;
-
-
-```
-nvm use --delete-prefix v8.16.1 
-npm install -g @devicefarmer/stf
-```
-
-> **Note:** node version **8.16.1** is being used for **stf**, as it is not working with higher versions of node because of a few backward incompatible changes in some dependent modules.  
-
-### Building the Application
-
-
-```
-cd remote-slave-app && ./gradlew clean build 
-```
-
-### Runing the Application
-
-Once the application is built, will be created **`build/libs/remote-slave-app.war`**. Run the following command to launch and attach the slave to master.
-
-```
-java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --master.host=0.0.0.0
-```
-
-* **`-Dandroid.home`** — optional if **`ANDROID_HOME`** environment variable is set.
-* **`--master.host`** — default connnects to **`0.0.0.0`**. Should to change to the IP of machine that is running the master application.
-
-This command can be run in background using the following command:
-
-```
-java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --master.host=0.0.0.0 > slave.log 2>&1 < /dev/null &
-```
-
-### Maintenance Activities
-
-* **Daily at 12:00 AM**, all the logs will be cleaned up. This is controlled by the application property **`cron.clean_up_logs`** present in **`remote-slave-app/src/main/resources/application.properties`**. As the logs will be cleaned up, the URL of appium session logs that is sent when allocating session will be valid only until its is cleared.
-* **Daily at 02:00 AM**, all the emulators will be rebooted. This is controlled by the application property **`cron.restart_emulators`** present in **`remote-slave-app/src/main/resources/application.properties`**
 
 
 ## Integrating with Test Automation Code
