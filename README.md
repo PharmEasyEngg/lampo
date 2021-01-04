@@ -9,8 +9,9 @@ Here, we have a master-slave architecture where anyone can attach their machines
 
 ![](design.png)
 
+> **Note**: Master and Slave can be installed in the same machine or separate machines. *It is recommended* to have it on separate machines.
 
-## Install - Master
+## 1. Install - Master
 
 ### Prerequisites
 
@@ -62,13 +63,13 @@ For enabling the **mongodb** service to run in background in **Mac**, run the fo
 brew services start mongodb-community
 ```
 
-### Building the Application
+### Building the Master Application
 
 ```
 cd remote-device-manager && ./gradlew clean build 
 ```
 
-### Running the Application
+### Running the Master Application
 
 Once the application is built successfully, **`build/libs/remote-device-manager.war`** will be created. Run the following command to start the master application:
 
@@ -99,7 +100,7 @@ java -jar build/libs/remote-device-manager.war --max_session_duration=15
 ```
 
 
-## Install - Slave
+## 2. Install - Slave
 
 ### Prerequisites
 
@@ -206,14 +207,14 @@ npm install -g @devicefarmer/stf
 
 > **Note:** node version **8.16.1** is being used for **stf**, as it is not working with higher versions of node because of a few backward incompatible changes in some dependent modules.  
 
-### Building the Application
+### Building the Slave Application
 
 
 ```
 cd remote-slave-app && ./gradlew clean build 
 ```
 
-### Runing the Application
+### Running the Slave Application
 
 Once the application is built, will be created **`build/libs/remote-slave-app.war`**. Run the following command to launch and attach the slave to master.
 
@@ -230,9 +231,9 @@ This command can be run in background using the following command:
 java -Dandroid.home=/opt/android-sdk -jar build/libs/remote-slave-app.war --master.host=0.0.0.0 > slave.log 2>&1 < /dev/null &
 ```
 
-### Dashboard
+### 3. Lampo Dashboard
 
-Once the application is started successfully, open [http://localhost:5353/remote-device-manager/](http://localhost:5353/remote-device-manager/) to view the dashboard that displays the connected devices. If no slaves is connected to the master or slave(s) is connected but no devices are connected to the slave, then **"No Device Available"** wil be shown.
+Once both the applications are started successfully, open [http://localhost:5353/remote-device-manager/](http://localhost:5353/remote-device-manager/) to view the dashboard that displays the connected devices. If no slaves is connected to the master or slave(s) is connected but no devices are connected to the slave, then **"No Device Available"** wil be shown.
 
 This page automatically refreshes every **5 seconds**.
 
@@ -242,6 +243,7 @@ This page automatically refreshes every **5 seconds**.
 * Clicking on the device, redirection to the STF page will happen where we can input name and email to interact with the device.
 
 > **Note:** Currently STF is supported for android phones only (both emulators and real devices). Hence interaction with iOS devices is currently not supported.
+> **Note:** For adding the specific mobile images, refer the APIs section [uploading-mobile-images](#uploading-mobile-images).
 
 
 
