@@ -243,6 +243,7 @@ This page automatically refreshes every **5 seconds**.
 * Clicking on the device, redirection to the STF page will happen where we can input name and email to interact with the device.
 
 > **Note:** Currently STF is supported for android phones only (both emulators and real devices). Hence interaction with iOS devices is currently not supported.
+>
 > **Note:** For adding the specific mobile images, refer the APIs section [uploading-mobile-images](#uploading-mobile-images).
 
 
@@ -584,3 +585,7 @@ For uploading images of mobile phones connected to the slave machines. If no mat
 ## Demonstration Video
 
 ![](running-master-slave.gif)
+
+## Issues
+
+Please raise any issues found [here](https://github.com/PharmEasyEngg/lampo/issues)
