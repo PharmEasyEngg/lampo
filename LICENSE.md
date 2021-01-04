@@ -7,9 +7,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
-Commercial distributors of software may accept certain responsibilities with respect to end users, business partners and the like. While this license is intended to facilitate the commercial use of the Program, the Contributor who includes the Program in a commercial product offering should do so in a manner which does not create potential liability for other Contributors.
-
-This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
 
 This software uses open-source dependencies that are listed under the licenses - [Eclipse Public License v2.0](https://www.eclipse.org/legal/epl-2.0/), [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html), [Server Side Public License](https://www.mongodb.com/licensing/server-side-public-license), [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/) and [MIT License](https://opensource.org/licenses/MIT). Please go through the description of the licenses to understand the usage agreement.
+
+By using this License you agree that you have read, understood and agreed to be bound by, including without limitation by these Terms and that the entire risk as to the quality and performance of the software is with you.
