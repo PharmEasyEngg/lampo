@@ -1,4 +1,4 @@
-package com.auito.automationtools;
+package com.lampo.master;
 
 import static com.lampo.master.config.ClientConfiguration.DEVICE_UPDATE_QUEUE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,19 +85,6 @@ import io.arivera.oss.embedded.rabbitmq.bin.RabbitMqPlugins;
  * SOFTWARE. <br/>
  * <br/>
  * 
- * Commercial distributors of software may accept certain responsibilities with
- * respect to end users, business partners and the like. While this license is
- * intended to facilitate the commercial use of the Program, the Contributor who
- * includes the Program in a commercial product offering should do so in a
- * manner which does not create potential liability for other Contributors.
- * <br/>
- * <br/>
- * 
- * This License does not grant permission to use the trade names, trademarks,
- * service marks, or product names of the Licensor, except as required for
- * reasonable and customary use in describing the origin of the Work and
- * reproducing the content of the NOTICE file. <br/>
- * <br/>
  * 
  * This software uses open-source dependencies that are listed under the
  * licenses - {@link <a href="https://www.eclipse.org/legal/epl-2.0/">Eclipse
@@ -109,8 +96,12 @@ import io.arivera.oss.embedded.rabbitmq.bin.RabbitMqPlugins;
  * {@link <a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public
  * License 2.0</a>} and {@link <a href="https://opensource.org/licenses/MIT">MIT
  * License</a>}. Please go through the description of the licenses to understand
- * the usage agreement.
+ * the usage agreement. <br/>
+ * <br/>
  * 
+ * By using the license, you agree that you have read, understood and agree to
+ * be bound by, including without any limitation by these terms and that the
+ * entire risk as to the quality and performance of the software is with you.
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
