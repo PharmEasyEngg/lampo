@@ -1,8 +1,8 @@
 # Lampo - The Mobile Device Lab
 
-**Lampo** is created for allowing to run appium mobile automation scripts on mobile devices connected to remote machines. It also aims at allowing user to interact with the remotely connected devices for manual testing. 
+**Lampo** is developed to run appium mobile automation scripts on mobile devices connected to remote machines. It also aims at allowing user to interact with the remotely connected devices for manual testing. 
 
-Here, we have a master-slave architecture where anyone can attach their machines as slaves to master and share their devices for anyone to use remotely and all the devices are managed centrally by the master application. These attached devices can be used for both automation and manual testing.
+Here, we have a master-slave architecture where anyone can attach their machines as slaves to master and share their devices with anyone within the organisation to use remotely and all the devices are managed centrally by the master application. These attached devices can be used for both automation and manual testing.
 
 
 ## Design
@@ -10,7 +10,7 @@ Here, we have a master-slave architecture where anyone can attach their machines
 ![](design.png)
 
 
-## Master
+## Install - Master
 
 ### Prerequisites
 
@@ -361,7 +361,7 @@ This page automatically refreshes every **5 seconds**.
 > **Note:** Currently STF is supported for android phones only (both emulators and real devices). Hence interaction with iOS devices is currently not supported.
 
 
-## Slave
+## Install - Slave
 
 ### Prerequisites
 
