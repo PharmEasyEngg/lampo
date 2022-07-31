@@ -1,0 +1,99 @@
+<div class="container-fluid" style="padding: 2rem" th:fragment="devices">
+
+	<div style="display: inline-block; text-align: center; width: 100%">
+		<span
+			style="font-size: 2rem; font-weight: bolder; text-align: center;"
+			th:text="${devices.isEmpty()} ? 'No Device Available': 'Connected Android & iOS Devices'"></span>
+		<!-- <span style="float: right; padding: 1rem"> <a href="/logout"><img
+				th:src="@{/images/logout.png}" style="height: 2.5rem; width: 2.5rem"
+				alt="Logout" title="Logout"></img></a> </span> -->
+
+	</div>
+
+	<div class="row" style="position: absolute; padding: 3rem">
+		<div th:each="instance,itr : ${devices}" class="col-sm-2 card"
+			th:title="${ !instance.isConnected ?  'device is not connected' : (   !instance.isAndroid || #strings.contains(instance.url, 'localhost') ? 'cannot interact with devices connect to localhost': '') }"
+			th:classappend="${!instance.isFree || !instance.isConnected ? 'grey ' : ''}">
+			<table class="card-body" cellpadding="5" cellspacing="5"
+				style="text-align: left; font-size: 1.5vh; margin: 1em;">
+				<tr style="height: 5rem">
+					<td colspan="2"><a target="_blank" th:href="${instance.url}"
+						th:classappend="${!instance.isAndroid || !instance.isConnected || #strings.contains(instance.url, 'localhost') ? 'link-disabled' :  ''}"
+						class="card-link"> <img
+							onerror="this.onerror=null;this.src='/images/default/default.png';"
+							class="card-img-top"
+							th:src="${ '/images/phones/' + instance.imageUrl + '.png'}"
+							alt="Phone" /></a></td>
+				</tr>
+				<tr>
+					<td style="min-height: 20px; max-height: 20px" colspan="2">
+						<h6 class="card-title bolder text-center-align"
+							th:classappend="${instance.isAndroid} ? '' : ''"
+							th:text="${instance.isAndroid} ? ${instance.marketName} : ${instance.model}" />
+					</td>
+				</tr>
+				<tr>
+					<td><img title="Manufacturer" width="30px" height="30px"
+						class="card-text" th:src="@{/images/manufacturer.png}"></td>
+					<td>
+						<p class="card-text bolder " th:text="${instance.manufacturer}" />
+					</td>
+				</tr>
+				<tr>
+					<td><img width="30px" height="30px" class="card-text"
+						title="Mobile Device Type" th:src="@{/images/mobile.png}"></td>
+					<td>
+						<p class="card-text bolder" th:text="${instance.deviceType}" />
+					</td>
+				</tr>
+				<tr>
+					<td th:if="${instance.isAndroid}"><img width="30px"
+						title="Android Version" height="30px" class="card-text"
+						th:src="@{/images/android.png}"></td>
+
+					<td th:if="${!instance.isAndroid}"><img width="30px"
+						title="iOS Version" height="30px" class="card-text"
+						th:src="@{/images/ios.png}"></td>
+					<td>
+						<p class="card-text bolder" th:text="${instance.sdkVersion}" />
+					</td>
+				</tr>
+				<tr
+					th:if="${instance.isAndroid && instance.browserVersion != null && #strings.length(#strings.trim(instance.browserVersion)) > 0}">
+					<td><img width="30px" height="30px" class="card-text"
+						title="Chrome Version" th:src="@{/images/chrome.png}"></td>
+					<td>
+						<p class="card-text bolder" th:text="${instance.browserVersion}" />
+					</td>
+				</tr>
+				<tr>
+					<td><img width="30px" height="30px" class="card-text"
+						title="Owned By" th:src="@{/images/user.png}"></td>
+					<td>
+						<p class="card-text bolder" th:text="${instance.ownedBy}" />
+					</td>
+				</tr>
+				<tr
+					th:if="${null != instance.allocatedTo && #strings.length(#strings.trim(instance.allocatedTo)) > 0}"
+					class='enabled'>
+					<td><img width="30px" height="30px" class="card-text"
+						title="Allocated For" th:src="@{/images/allocate.png}"></td>
+					<td><span class="card-text bolder"
+						th:if="${instance.allocatedTo != null}"
+						th:utext="'IP: <span class=\'txt-color\'>' + ${instance.allocatedTo.ip} + '</span><br/>User: <span class=\'txt-color\'>' + ${instance.allocatedTo.user} + '</span><br/>Team: <span class=\'txt-color\'>' + ${instance.allocatedTo.team} + '</br><span style=\''+ ${ instance.allocatedTo.jenkinsJobLink == null || instance.allocatedTo.jenkinsJobLink.isEmpty() ? 'display:none' : 'display:block'} +'\'>Job: <a target=\'blank\' class=\'card-link\' href=\''+ ${instance.allocatedTo.jenkinsJobLink} + '\'>link</a></span>'" />
+					</td>
+				</tr>
+				<tr
+					th:if="${null != instance.stfSessionHeldBy && #strings.length(#strings.trim(instance.stfSessionHeldBy)) > 0}"
+					class='enabled'>
+					<td><img width="30px" height="30px" class="card-text"
+						title="STF Session Held By" th:src="@{/images/stf.png}"></td>
+					<td><span class="card-text bolder"
+						th:if="${instance.stfSessionHeldBy != null}"
+						th:utext="'<a href=email:' + ${instance.stfSessionHeldBy.email} + '>' + ${instance.stfSessionHeldBy.name} + '</a>'" />
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

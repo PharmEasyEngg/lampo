@@ -1,0 +1,30 @@
+{
+  "capabilities" : [ {
+    "browserName" : "chrome",
+    "version" : "10",
+    "maxInstances" : 1,
+    "platform" : "android",
+    "platformVersion" : "10",
+    "deviceName" : "Emulator Android SDK built for arm64",
+    "udid" : "emulator-5554",
+    "automationName" : "uiautomator2",
+    "realDevice" : false,
+    "slaveIp" : "192.168.1.4"
+  } ],
+  "configuration" : {
+    "cleanUpCycle" : 30,
+    "timeout" : 30,
+    "proxy" : "com.lampo.device_lab.master.grid.CustomRemoteProxy",
+    "url" : "http://192.168.1.4:4723/wd/hub",
+    "host" : "192.168.1.4",
+    "port" : 4723,
+    "maxSession" : 1,
+    "register" : true,
+    "registerCycle" : 5000,
+    "hubPort" : 4444,
+    "hubHost" : "localhost",
+    "hubProtocol" : "http",
+    "unregisterIfStillDownAfter" : 10000,
+    "debug" : true
+  }
+}

@@ -1,0 +1,183 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Lampo Mobile Device Lab - Login</title>
+<link rel="shortcut icon" th:href="@{/images/favicon.png}"
+	type="image/x-icon">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
+
+<style>
+/* Made with love by Mutiullah Samim*/
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html, body {
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100%;
+	font-family: 'Numans', sans-serif;
+}
+
+.container {
+	height: 100%;
+	align-content: center;
+}
+
+.card {
+	height: 350px;
+	margin-top: auto;
+	margin-bottom: auto;
+	width: 400px;
+	background-color: white !important;
+	z-index: 1000
+}
+
+.social_icon span {
+	font-size: 60px;
+	margin-left: 10px;
+	color: #FFC312;
+}
+
+.social_icon span:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.card-header h3 {
+	color: white;
+}
+
+.social_icon {
+	position: absolute;
+	right: 20px;
+	top: -45px;
+}
+
+.input-group-prepend span {
+	width: 50px;
+	background-color: #FFC312;
+	color: black;
+	border: 0 !important;
+}
+
+input:focus {
+	outline: 0 0 0 0 !important;
+	box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+	color: white;
+}
+
+.remember input {
+	width: 20px;
+	height: 20px;
+	margin-left: 15px;
+	margin-right: 5px;
+}
+
+.login_btn {
+	color: black;
+	background-color: #FFC312;
+	width: 100px;
+}
+
+.login_btn:hover {
+	color: black;
+	background-color: white;
+}
+
+.links {
+	color: white;
+}
+
+.links a {
+	margin-left: 4px;
+}
+
+.center {
+	margin: 0;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.button {
+	background-color: #58b9ab; /* Green */
+	border: none;
+	color: white;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+h3 {
+	margin: auto;
+	color: #111;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 25px;
+	font-weight: 300;
+	line-height: 32px;
+	text-align: center;
+	color: #58b9ab;
+}
+/* style="font-size:25px; color:#58b9ab; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"
+ */
+.button1 {
+	background-color: white;
+	color: black;
+	border: 2px solid #58b9ab;
+}
+
+.button1:hover {
+	background-color: #58b9ab;
+	color: white;
+}
+</style>
+</head>
+
+<body th:style="'background-image: url(' + @{/images/bg.jpeg} + ')'">
+	<div class="container">
+		<div class="d-flex justify-content-center h-100" style="z-index: 100;">
+			<div class="card" style="background-color: white;">
+				<div class="card-header">
+					<p
+						style="color: red; font-weight: bolder; font-size: 0.85rem; text-align: center"
+						th:text="${error}">
+				</div>
+				<div class="card-body center" style="border-radius: 25px">
+					<form>
+						<div class="input-group form-group">
+							<img th:src="@{/images/logo.png}" alt="Avatar"
+								style="width: 100%">
+						</div>
+						<div class="input-group form-group"
+							style="align-text: center; padding: 1rem 0">
+							<h3>Lampo Mobile Device Farm</h3>
+						</div>
+						<div class="input-group form-group" style="padding: 2rem 0">
+							<a href="/oauth2/authorization/google"
+								class="btn  btn-lg button button1" role="button"
+								style="width: 100%; color: black;"><span> <img
+									th:src="@{/images/google_icon.png}" alt="Avatar"
+									style="width: 20px"> Log in with Google
+							</span></a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

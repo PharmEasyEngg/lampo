@@ -1,0 +1,52 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'war'
+	id 'eclipse'
+	id 'idea'
+}
+
+group = 'com.lampo'
+version = '1.0.0-RELEASE'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+war {
+    baseName = "slave"
+    archiveName = jar.baseName + ".war"
+}
+
+bootWar {
+    archiveFileName = jar.baseName + ".war"
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	
+	implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.google.guava:guava:28.2-jre"
+    implementation "org.rauschig:jarchivelib:1.0.0"
+    implementation 'com.rethinkdb:rethinkdb-driver:2.4.4'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

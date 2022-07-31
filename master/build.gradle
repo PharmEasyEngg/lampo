@@ -1,0 +1,67 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'war'
+        id 'eclipse'
+        id 'idea'
+}
+
+group = 'com.lampo'
+version = '1.0.0-RELEASE'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+war {
+    baseName = "master"
+    archiveName = jar.baseName + ".war"
+}
+
+bootWar {
+    archiveFileName = jar.baseName + ".war"
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+        implementation "org.apache.httpcomponents:httpclient"
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+        
+        compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+	
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	
+	implementation "com.google.guava:guava:28.2-jre"
+	implementation "org.seleniumhq.selenium:selenium-server:3.141.59"
+	implementation 'org.jsoup:jsoup:1.14.3'
+	
+	
+	
+	
+	//implementation 'org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE'
+	//implementation 'org.springframework.security:spring-security-oauth2-client'
+	//implementation 'org.springframework.security:spring-security-oauth2-jose'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
