@@ -11,6 +11,8 @@ target
 .vscode
 videos
 chromedriver
+node-config
+master/files
 
 ### build and output directories ###
 ####################################
@@ -54,4 +56,3 @@ download*
 *.zip
 
 /.nb-gradle/
-

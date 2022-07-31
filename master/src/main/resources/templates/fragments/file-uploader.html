@@ -1,0 +1,58 @@
+<div th:fragment="file-uploader" id="file-uploader" class="grey"
+	style="display: block; border: solid 2px; border-radius: 15px; padding: 1rem; margin: 1rem; float: right; position: absolute; right: 0.5rem">
+	<div
+		style="position: absolute; margin: 0 auto; display: none; float: center; z-index: 100"
+		id="loader">
+		<img style="margin: 0 50%; height: 5rem"
+			src="http://www.mystiquevalley.com/images/loading.gif" />
+	</div>
+	<table style="margin: 0 auto; z-index: 100" cellpadding="2"
+		cellspacing="2">
+		<tr>
+			<td colspan="3"><span
+				style="font-weight: bolder; text-align: center">Upload Apps
+					to Host</span></td>
+		</tr>
+		<tr>
+			<td><select id="directory"
+				style="border-radius: 10px; display: inline-block; padding: 0 0.5rem">
+					<option th:each="directory : ${directories}" th:text="${directory}"></option>
+			</select></td>
+			<td><label for="file"> <img title="click to upload"
+					style="width: 30px; height: 20px; cursor: pointer; display: inline-block; margin-top: 5px"
+					th:src="@{/images/upload.png}" />
+			</label> <input accept=".zip,.apk,.ipa" id="file" name="file" type="file" />
+			</td>
+			<td><a id="view-files" href="#"> <img
+					title="view upload files"
+					style="width: 30px; height: 20px; cursor: pointer; display: inline-block; margin-top: -5px"
+					th:src="@{/images/view.png}" />
+			</a></td>
+		</tr>
+	</table>
+</div>
+<div class="dialog-content" style="display: none"
+	th:fragment="path-popup">
+	<span style="float: right"><img
+		style="height: 1rem; width: 1rem; cursor: pointer"
+		th:src="@{/images/close.png}" class="close-btn" /></span>
+	<h3 style="color: green; text-align: center; padding: 0.5rem 0"
+		id="popup-title"></h3>
+	<div>
+		<span>Add the following in config.properties or send as JVM
+			argument:</span></br> </br>
+		<p>
+			Incase of android app, <br />
+			<code>
+				appium.android.app_path=<span class="path" />
+			</code>
+		</p>
+		<br />
+		<p>
+			Incase of iOS app, <br />
+			<code>
+				appium.ios.app_path=<span class="path" />
+			</code>
+		</p>
+	</div>
+</div>

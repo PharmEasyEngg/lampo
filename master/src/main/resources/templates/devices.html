@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title>Devices</title>
+<link rel="shortcut icon" type="image/jpg"
+	th:href="@{/images/favicon.png}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/init.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script th:src="@{/js/init.js}"></script>
+</head>
+<body
+	th:style="'background-image: url(' + @{/images/background.jpeg} + ')'">
+	<div style='text-align:center; max-height: 300px' id="app-files"/>
+	<div th:replace="fragments/file-uploader.html :: path-popup"></div>
+	<div th:replace="fragments/file-uploader.html :: file-uploader"></div>
+	<div class="body">
+		<div th:replace="fragments/card.html :: devices"></div>
+	</div>
+</body>
+</html>

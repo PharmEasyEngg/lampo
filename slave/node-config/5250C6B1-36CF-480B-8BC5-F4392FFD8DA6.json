@@ -1,0 +1,30 @@
+{
+  "capabilities" : [ {
+    "browserName" : "safari",
+    "version" : "15.5",
+    "maxInstances" : 1,
+    "platform" : "ios",
+    "platformVersion" : "15.5",
+    "deviceName" : "Apple iPhone 13 mini",
+    "udid" : "5250C6B1-36CF-480B-8BC5-F4392FFD8DA6",
+    "automationName" : "xcuitest",
+    "realDevice" : false,
+    "slaveIp" : "192.168.1.5"
+  } ],
+  "configuration" : {
+    "cleanUpCycle" : 30,
+    "timeout" : 30,
+    "proxy" : "com.lampo.device_lab.master.grid.CustomRemoteProxy",
+    "url" : "http://192.168.1.5:4723/wd/hub",
+    "host" : "192.168.1.5",
+    "port" : 4723,
+    "maxSession" : 1,
+    "register" : true,
+    "registerCycle" : 5000,
+    "hubPort" : 4444,
+    "hubHost" : "localhost",
+    "hubProtocol" : "http",
+    "unregisterIfStillDownAfter" : 10000,
+    "debug" : true
+  }
+}
