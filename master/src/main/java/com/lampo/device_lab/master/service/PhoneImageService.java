@@ -1,5 +1,8 @@
 package com.lampo.device_lab.master.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,9 +11,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import com.lampo.device_lab.master.model.Photo;
+import com.lampo.device_lab.master.repos.IPhoneImageRepository;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -69,6 +77,9 @@ public class PhoneImageService {
 	@Autowired
 	private ApplicationContext context;
 
+	@Autowired
+	private IPhoneImageRepository imageRepo;
+
 	private List<String> phoneImages = new ArrayList<>();
 
 	@PostConstruct
@@ -79,23 +90,39 @@ public class PhoneImageService {
 
 	}
 
-	public Collection<String> getPhotoByName(@NonNull String name) {
-
-		Collection<String> photos = getPhotoByName(name, false);
-		return !photos.isEmpty() ? photos : getPhotoByName(name.trim().split("\\s+")[0], true);
+	public Collection<Photo> getPhotoByName(@NonNull String name) {
+		Collection<Photo> photos = getPhotoByName(name, false);
+		return !photos.isEmpty() ? photos : getPhotoByName(name.split("\\s+")[0], true);
 	}
 
-	private Collection<String> getPhotoByName(@NonNull String name, boolean checkDefault) {
-		Collection<String> photos = findByName(name);
+	private Collection<Photo> getPhotoByName(@NonNull String name, boolean checkDefault) {
+		Collection<Photo> photos = imageRepo.findByName(name);
 		if (photos.isEmpty() && checkDefault) {
 			return getPhotoByName("default");
 		}
 		return photos;
 	}
 
-	private Collection<String> findByName(@NonNull String name) {
+	public Collection<String> findByName(@NonNull String name) {
 		return phoneImages.stream().filter(e -> e.toLowerCase().contains(name.trim().toLowerCase()))
 				.collect(Collectors.toList());
 	}
 
+	public Photo addPhoto(@NonNull File file) throws IOException {
+		String name = file.getName().substring(0, file.getName().lastIndexOf('.')).replaceAll("[\\(\\)]", " ");
+		Collection<Photo> photo = getPhotoByName(name, false);
+		Photo _photo = null;
+		if (photo.isEmpty()) {
+			_photo = new Photo();
+			_photo.setName(name);
+			_photo.setImage(new Binary(BsonBinarySubType.BINARY, Files.readAllBytes(file.toPath())));
+		} else {
+			_photo = photo.stream().findFirst().get();
+		}
+		return addPhoto(_photo);
+	}
+
+	public Photo addPhoto(@NonNull Photo photo) {
+		return imageRepo.save(photo);
+	}
 }
