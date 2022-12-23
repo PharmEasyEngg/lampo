@@ -35,6 +35,7 @@ import com.lampo.device_lab.master.model.Device;
 import com.lampo.device_lab.master.model.DeviceStatusModel;
 import com.lampo.device_lab.master.model.HeldBy;
 import com.lampo.device_lab.master.model.ModelDevice;
+import com.lampo.device_lab.master.model.Photo;
 import com.lampo.device_lab.master.repos.IDeviceRepository;
 import com.lampo.device_lab.master.repos.IDeviceStatusRepository;
 import com.lampo.device_lab.master.repos.ITeamRepository;
@@ -217,7 +218,8 @@ public class HomeController {
 	private String getPhoneImage(@NonNull Device device) {
 		String name = (device.getDeviceInformation().isAndroid() ? device.getDeviceInformation().getMarketName()
 				: device.getDeviceInformation().getModel()).replaceAll("[\\(\\)]", " ");
-		return phoneImageService.getPhotoByName(name).stream().findFirst().orElseGet(() -> "default");
+		return phoneImageService.getPhotoByName(name).stream().map(Photo::getName).findFirst()
+				.orElseGet(() -> "default");
 	}
 
 	private String getUrl(@NonNull Device device, String clientIp) {
