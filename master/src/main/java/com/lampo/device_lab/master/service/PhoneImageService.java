@@ -1,7 +1,10 @@
 package com.lampo.device_lab.master.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +19,7 @@ import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 import com.lampo.device_lab.master.model.Photo;
 import com.lampo.device_lab.master.repos.IPhoneImageRepository;
@@ -86,7 +90,17 @@ public class PhoneImageService {
 	@SneakyThrows
 	private void uploadDefaultImages() {
 		Arrays.stream(context.getResources("classpath:static/images/phones/*.png"))
-				.forEach(e -> phoneImages.add(e.getFilename().replace(".png", "")));
+                .forEach(e -> {
+                    File file = new File(e.getFilename());
+                    try (InputStream stream = e.getInputStream(); OutputStream out = new FileOutputStream(file)) {
+                        FileCopyUtils.copy(stream, out);
+                        addPhoto(file);
+                        file.delete();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    phoneImages.add(e.getFilename().replace(".png", ""));
+                });
 
 	}
 
